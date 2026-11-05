@@ -1,0 +1,28 @@
+name: Restore index.html
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'bethel-s-design-studio.html'
+      - '.github/workflows/restore-index.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  restore-index:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Copy source file to index.html
+        run: cp bethel-s-design-studio.html index.html
+      - name: Commit index.html if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git diff --cached --quiet || git commit -m "Restore index.html from bethel-s-design-studio.html"
+          git push
